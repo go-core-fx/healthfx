@@ -11,19 +11,27 @@ import (
 const providerTimeout = 5 * time.Second
 
 type Service struct {
+	version Version
+
 	providers []Provider
 	mu        sync.RWMutex
 
 	logger *zap.Logger
 }
 
-func NewService(providers []Provider, logger *zap.Logger) *Service {
+func NewService(providers []Provider, version Version, logger *zap.Logger) *Service {
 	return &Service{
+		version: version,
+
 		providers: providers,
 		mu:        sync.RWMutex{},
 
 		logger: logger,
 	}
+}
+
+func (s *Service) Version() Version {
+	return s.version
 }
 
 func (s *Service) Register(p Provider) {
